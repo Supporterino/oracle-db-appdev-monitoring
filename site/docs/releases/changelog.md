@@ -9,7 +9,7 @@ List of upcoming and historic changes to the exporter.
 
 ### Next, TBD
 
-TBD
+- Add an `ecs` value for the process log `format` setting that emits Elastic Common Schema (ELK) conformant JSON, following the field conventions of the official Elastic ECS logging libraries. The `ecs` format uses ECS field names (`@timestamp`, `log.level`, `message`, `log.origin.file.*`, `log.origin.function`, `error.message`, `error.type`, `ecs.version`, `service.name`, `service.version`) and emits durations as numeric nanoseconds instead of unit strings so they map cleanly to ECS duration fields in Elasticsearch.
 
 ### 2.4.1, June 11th, 2026
 

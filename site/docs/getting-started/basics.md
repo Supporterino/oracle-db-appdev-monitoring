@@ -205,7 +205,7 @@ metrics:
 log:
   # Log level: debug, info, warn, or error
   level: info
-  # Log output format: logfmt or json
+  # Log output format: logfmt, json, or ecs (ELK/Elastic Common Schema JSON)
   format: logfmt
   # Path of log file
   destination: /opt/alert.log

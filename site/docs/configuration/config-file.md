@@ -87,7 +87,7 @@ metrics:
 log:
   # Log level: debug, info, warn, or error
   level: info
-  # Log output format: logfmt or json
+  # Log output format: logfmt, json, or ecs
   format: logfmt
   # Path of log file
   destination: /opt/alert.log
@@ -113,7 +113,7 @@ From the exporter configuration file, you may optionally load database credentia
 The optional `log` section configures alert log export and exporter process logging.
 
 - `level`: Process log level. Accepted values are `debug`, `info`, `warn`, and `error`. Defaults to `info`.
-- `format`: Process log output format. Accepted values are `logfmt` and `json`. Defaults to `logfmt`.
+- `format`: Process log output format. Accepted values are `logfmt`, `json`, and `ecs`. Defaults to `logfmt`. The `ecs` format emits [Elastic Common Schema](https://www.elastic.co/guide/en/ecs/current/index.html) conformant JSON for ingestion by ELK (Elasticsearch/Logstash/Kibana), following the field conventions of the [official ECS logging libraries](https://www.elastic.co/docs/reference/ecs/logging/intro). It uses ECS field names (`@timestamp`, `log.level`, `message`, `log.origin.file.*`, `log.origin.function`, `error.message`, `error.type`, `ecs.version`, `service.name`, `service.version`) and emits durations as numeric nanoseconds (with no unit suffix).
 - `destination`: Base alert log file path. Defaults to `/log/alert.log`.
 - `interval`: Interval between alert log updates. Defaults to `15s`.
 - `disable`: Disable alert log export when set to `1`. Defaults to `0`.
