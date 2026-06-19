@@ -219,6 +219,27 @@ log:
 	}
 }
 
+func TestLoadMetricsConfigurationAcceptsECSLogFormat(t *testing.T) {
+	configPath := writeExporterConfig(t, `
+databases:
+  default:
+    username: scott
+    password: tiger
+    url: localhost:1521/freepdb1
+log:
+  level: info
+  format: ecs
+`)
+
+	cfg, err := LoadMetricsConfiguration(testLogger(), &Config{ConfigFile: configPath})
+	if err != nil {
+		t.Fatalf("expected config to load, got %v", err)
+	}
+	if cfg.Logging.Format != "ecs" {
+		t.Fatalf("expected ecs log format, got %q", cfg.Logging.Format)
+	}
+}
+
 func TestLoadMetricsConfigurationRejectsInvalidLogLevelAndFormat(t *testing.T) {
 	tests := []struct {
 		name    string
