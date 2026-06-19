@@ -438,9 +438,9 @@ func (m *MetricsConfiguration) validateLoggingConfig() error {
 		return fmt.Errorf("invalid log.level %q; accepted values are debug, info, warn, error", m.Logging.Level)
 	}
 	switch m.Logging.Format {
-	case "", "logfmt", "json":
+	case "", "logfmt", "json", "ecs":
 	default:
-		return fmt.Errorf("invalid log.format %q; accepted values are logfmt, json", m.Logging.Format)
+		return fmt.Errorf("invalid log.format %q; accepted values are logfmt, json, ecs", m.Logging.Format)
 	}
 	return nil
 }

@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"html"
 	"io"
+	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -87,6 +88,25 @@ func promslogConfig(levelValue, formatValue string) (*promslog.Config, error) {
 	}, nil
 }
 
+// newLogger constructs the process logger for the given level and format. The
+// "ecs" format emits Elastic Common Schema (ELK) conformant JSON; "logfmt" and
+// "json" use the Prometheus promslog defaults.
+func newLogger(levelValue, formatValue string) (*slog.Logger, error) {
+	if formatValue == "ecs" {
+		level := promslog.NewLevel()
+		if err := level.Set(levelValue); err != nil {
+			return nil, err
+		}
+		return collector.NewECSLogger(os.Stderr, level.Level(), Version), nil
+	}
+
+	cfg, err := promslogConfig(levelValue, formatValue)
+	if err != nil {
+		return nil, err
+	}
+	return promslog.New(cfg), nil
+}
+
 func landingPageHTML(metricsPath string) string {
 	escapedVersion := html.EscapeString(Version)
 	escapedMetricsPath := html.EscapeString(metricsPath)
@@ -120,12 +140,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	promLogConfig, err := promslogConfig(m.Logging.Level, m.Logging.Format)
+	logger, err := newLogger(m.Logging.Level, m.Logging.Format)
 	if err != nil {
 		bootstrapLogger.Error("invalid logging configuration", "error", err)
 		os.Exit(1)
 	}
-	logger := promslog.New(promLogConfig)
 
 	freeOSMemInterval, enableFree := os.LookupEnv("FREE_INTERVAL")
 	if enableFree {
